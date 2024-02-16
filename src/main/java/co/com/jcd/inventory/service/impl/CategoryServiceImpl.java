@@ -2,7 +2,9 @@ package co.com.jcd.inventory.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,6 +37,7 @@ public class CategoryServiceImpl implements ICategoryService{
 		} catch(DataAccessException ex) {
 			response.setMetadata(ex.getMessage(),Constants.COD_ERROR.getValor() 
 					, generateDate());
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
 	}
@@ -44,6 +47,30 @@ public class CategoryServiceImpl implements ICategoryService{
         DateTimeFormatter dateTimeFormatter = 
         		DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return currentLocalDateTime.format(dateTimeFormatter);        
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ResponseEntity<CategoryResponseRest> searchById(Long id) {
+		CategoryResponseRest response = new CategoryResponseRest();
+		List<Category> listCat = new ArrayList<>();
+		try {
+			Optional<Category> catFindId = categoryDao.findById(id);
+			if(catFindId.isPresent()) {
+				listCat.add(catFindId.get());
+				response.getCategroyResponse().setCategory(listCat);
+			} else {
+				response.setMetadata("Categoria no encontrada",Constants.COD_ERROR.getValor() 
+						, generateDate());
+				return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.NOT_FOUND);
+			}
+			
+		} catch(DataAccessException ex) {
+			response.setMetadata(ex.getMessage(),Constants.COD_ERROR.getValor() 
+					, generateDate());
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
 	}
 
 }
