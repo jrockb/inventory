@@ -2,6 +2,7 @@ package co.com.jcd.inventory.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,11 @@ public class CategoryController {
 	@PutMapping("/categories/{id}")
 	public ResponseEntity<CategoryResponseRest> updateCategory(@RequestBody CategoriaRequest req, @PathVariable Long id) {
 		return service.updateCategory(req, id);
+	}
+	
+	@DeleteMapping("/categories/{id}")
+	public ResponseEntity<CategoryResponseRest> deleteCategory(@PathVariable Long id) {
+		return service.deleteCategory(id);
 	}
 
 }
