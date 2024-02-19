@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.com.jcd.inventory.request.CategoriaRequest;
 import co.com.jcd.inventory.response.CategoryResponseRest;
 import co.com.jcd.inventory.service.ICategoryService;
 
@@ -25,6 +28,11 @@ public class CategoryController {
 	@GetMapping("/categories/{id}")
 	public ResponseEntity<CategoryResponseRest> searchCategoriesById(@PathVariable Long id) {
 		return service.searchById(id);
+	}
+	
+	@PostMapping("/categories")
+	public ResponseEntity<CategoryResponseRest> createCategory(@RequestBody CategoriaRequest req) {
+		return service.createCategory(req);
 	}
 
 }
